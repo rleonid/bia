@@ -12,8 +12,8 @@ let update_skew_count c = function
 let skew str =
   let n = String.length str in
   let a = Array.make (n + 1) 0 in
-  for i = 1 to n do
-    a.(i) <- update_skew_count a.(i-1) str.[i-1];
+  for i = 0 to (n - 1) do
+    a.(i+1) <- update_skew_count a.(i) str.[i];
   done;
   a
 
