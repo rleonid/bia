@@ -5,7 +5,7 @@ let frequency_array text len =
   let t = int_of_float (4.0 ** (float_of_int len)) in
   let arr = Array.create t 0 in
   for pos = 0 to n - len do
-    let i  = pat_to_int_sub text ~pos ~len:len in
+    let i = pat_to_int_sub text ~pos ~len:len in
     arr.(i) <- arr.(i) + 1;
   done;
   arr
@@ -39,4 +39,5 @@ let clumps ~k ~at_least ~window_length genome =
         (index + 1, acc)) (0,[]) clump_arr
   |> snd
   |> List.rev
+
 
