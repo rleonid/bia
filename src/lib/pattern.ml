@@ -23,13 +23,16 @@ let pat_to_int s =
   !r
 
 let int_to_pat ~k p =
-  let rec loop kp a =
-    if kp = 0
-    then if List.length a < k
-         then loop kp ('A'::a)
-         else String.of_char_list a
-    else loop (kp / 4) ((int_to_char (kp mod 4))::a)
-  in loop p []
+  let s = String.make k 'A' in
+  let rec loop kp index =
+    if k = 0 || index < 0  then
+      s
+    else begin
+      s.[index] <- int_to_char (kp mod 4);
+      loop (kp / 4) (index - 1)
+    end
+  in
+  loop p (k - 1)
 
 let pat_to_int_sub text ~pos ~len =
   let rec loop i acc =
@@ -38,9 +41,18 @@ let pat_to_int_sub text ~pos ~len =
   in
   loop 0 0
 
-  (*
-open Core.Std
-let pat_to_int2 s =
+(* open Core.Std
+
+let int_to_pat_lst ~k p =
+  let rec loop kp a =
+    if kp = 0
+    then if List.length a < k
+         then loop kp ('A'::a)
+         else String.of_char_list a
+    else loop (kp / 4) ((int_to_char (kp mod 4))::a)
+  in loop p []
+
+let pat_to_int_lst s =
   let rec loop p = function [] -> p | h :: t -> loop (p * 4 + char_to_int h) t in
   loop 0 (String.to_list s)
 

@@ -1,3 +1,4 @@
+(** Constructing a bijection between a k-mer and [0, 4^k). *)
 
 val char_to_int : char -> int
 (** [char_to_int c] converts a nucleotide [c] code to an integer. *)
