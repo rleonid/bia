@@ -1,3 +1,4 @@
+open Pattern
 
 let ia f = Printf.kprintf (fun s -> raise (Invalid_argument s)) f ;;
 
@@ -45,9 +46,7 @@ module IntSet = Set.Make (struct
   let compare = compare
   end)
 
-(* Compute the [bound] neighbors of a pattern [str] *)
-let neighbors str bound =
-  let k = String.length str in
+let neighbor_patterns ~k ~pat ~bound =
   let rec loop pos changes acs pat =
     if changes = 0 then
       acs
@@ -63,11 +62,14 @@ let neighbors str bound =
       in
       IntSet.union change_later others_chan
   in
-  let pat = pat_to_int str in
   loop 0 bound (IntSet.singleton pat) pat
   |> IntSet.elements
-  |> Array.of_list
-  |> Array.map (int_to_pat ~k)
+
+let neighbors str bound =
+  let k   = String.length str in
+  let pat = pat_to_int str in
+  neighbor_patterns ~k ~pat ~bound
+  |> List.map (int_to_pat ~k)
 
 let test_immediate () =
   assert (immediate "ACGT" =
@@ -80,9 +82,9 @@ let test_immediate () =
 (* Almost the same but include the original string. *)
 let test_neighbors () =
   assert (neighbors "ACGT" 1 =
-    [| "AAGT"; "ACAT"; "ACCT"
-     ; "ACGA"; "ACGC"; "ACGG"
-     ; "ACGT"
-     ; "ACTT"; "AGGT"; "ATGT"
-     ; "CCGT"; "GCGT"; "TCGT"
-    |])
+    [ "AAGT"; "ACAT"; "ACCT"
+    ; "ACGA"; "ACGC"; "ACGG"
+    ; "ACGT"
+    ; "ACTT"; "AGGT"; "ATGT"
+    ; "CCGT"; "GCGT"; "TCGT"
+    ])
