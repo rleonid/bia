@@ -19,9 +19,6 @@ let sorted_frequency_array text len =
   Array.sort (fun (_,f1) (_,f2) -> compare f2 f1) res;
   res
 
-(** [clumps k at_least window_length genome] finds all [k]-mers that occur at
-    [at_least] times in a [window_length] in [genome].
- *)
 let clumps ~k ~at_least ~window_length genome =
   let fst_window = String.sub genome 0 window_length in
   let freq_arr   = frequency_array fst_window k in
