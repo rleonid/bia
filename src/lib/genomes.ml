@@ -8,3 +8,8 @@ let acc_upper (a,c,g,t) = function
         Printf.eprintf "not nucleotide %c" x;
         (a,c,g,t)
       end ;;
+
+let counts_upper str =
+  let r = ref (0,0,0,0) in
+  String.iter (fun c -> r := acc_upper !r c) str;
+  !r
