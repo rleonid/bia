@@ -25,7 +25,7 @@ let pat_to_int s =
 let int_to_pat ~k p =
   let s = String.make k 'A' in
   let rec loop kp index =
-    if k = 0 || index < 0  then
+    if k = 0 || index < 0 then
       s
     else begin
       s.[index] <- int_to_char (kp mod 4);
@@ -40,6 +40,18 @@ let pat_to_int_sub text ~pos ~len =
     else loop (i + 1) (acc * 4 + char_to_int text.[pos + i])
   in
   loop 0 0
+
+let reverse_complement ~k i =
+  let c = function
+          | 0 -> 3 | 1 -> 2 | 2 -> 1 | 3 -> 0
+          | x -> ia "complement:%d" x
+  in
+  let rec loop p index rp =
+    if index <= 0 then
+      rp
+    else
+      loop (p / 4) (index - 1) (c (p mod 4) + (rp * 4))
+  in loop i k 0
 
 (* open Core.Std
 

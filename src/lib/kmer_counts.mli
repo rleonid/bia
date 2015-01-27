@@ -1,9 +1,15 @@
 
-type frequency_array 
+type frequency_array
 
 (** [frequency_array text k] construct a frequency (# of observed instances)
-    array for all [k]-mer's in [text]. *)
-val frequency_array : ?bound:int -> string -> int -> frequency_array
+    array for all [k]-mer's in [text].
+
+    Optionally include all neighbors of [bound] distance away from a k-mer in
+    that k-mer's count, by setting bound to a positive integer.
+    Furthermore, you can include a k-mer's reverse complement's (ie. CGA -> TCG)
+    counts in that k-mer's count.
+    *)
+val frequency_array : ?bound:int -> ?reverse:bool -> string -> int -> frequency_array
 
 (** [annotate_fa k] annotate a frequency array of [k]-mers *)
 val annotate_fa : int -> frequency_array -> (string * int) array

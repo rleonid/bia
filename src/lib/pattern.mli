@@ -18,3 +18,6 @@ val pat_to_int_sub : string -> pos:int -> len:int -> int
 (** [pat_to_int_sub text ~pos ~len] computes 
     [pat_to_int (String.sub ~pos ~len text] efficiently. *)
 
+val reverse_complement : k:int -> int -> int
+(** [reverse_complement k p] computes the pattern of [p]'s reverse complement,
+    where [p] is a pattern for a [k]-mer. *)

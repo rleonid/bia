@@ -41,14 +41,14 @@ let immediate str =
   done;
   Array.map (int_to_pat ~k) res
 
-module IntSet = Set.Make (struct 
+module IntSet = Set.Make (struct
   type t = int
   let compare = compare
   end)
 
 let neighbor_patterns ~k ~pat ~bound =
   let rec loop pos changes acs pat =
-    if changes = 0 then
+    if changes <= 0 then
       acs
     else if pos >= k then
       acs
@@ -56,7 +56,7 @@ let neighbor_patterns ~k ~pat ~bound =
       let change_later = loop (pos + 1) changes acs pat in
       let others_chan  =
         neigh_at ~k ~pattern:pat ~pos
-        |> Array.map (fun npat -> 
+        |> Array.map (fun npat ->
             loop (pos + 1) (changes - 1) (IntSet.add npat acs) npat)
         |> Array.fold_left IntSet.union change_later
       in
