@@ -15,3 +15,8 @@ val skew : string -> int array
 val skew_min : string -> (int * int list)
 (** [skew_min] computes the value and locations of minimum skew in the passed
     sequence. *)
+
+val reverse_complement : string -> string
+(** [reverse_complement seq] returns the complementary sequence of [seq]
+    in reverse, ie what's on the other side of the DNA in that appropriate
+    order. *)

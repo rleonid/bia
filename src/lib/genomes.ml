@@ -1,10 +1,13 @@
-let acc_upper (a,c,g,t) = function 
-    'A' -> (a+1,c,g,t) 
-  | 'C' -> (a,c+1,g,t) 
-  | 'G' -> (a,c,g+1,t) 
-  | 'T' -> (a,c,g,t+1) 
-  | x -> 
-      begin 
+
+let ia f = Printf.kprintf (fun s -> raise (Invalid_argument s)) f ;;
+
+let acc_upper (a,c,g,t) = function
+    'A' -> (a+1,c,g,t)
+  | 'C' -> (a,c+1,g,t)
+  | 'G' -> (a,c,g+1,t)
+  | 'T' -> (a,c,g,t+1)
+  | x ->
+      begin
         Printf.eprintf "not nucleotide %c" x;
         (a,c,g,t)
       end ;;
@@ -19,7 +22,7 @@ let update_skew_count c = function
     | 'G' -> (c + 1)
     | 'A'
     | 'T' -> c
-    | x   -> raise (Invalid_argument (Printf.sprintf "skew: %c" x))
+    | x   -> ia "skew: %c" x
 
 (* Notes
  * - Not a generic implementation as it is tailored for computing C - G.
@@ -49,9 +52,27 @@ let skew_min str =
   in
   loop 0 0 [0] 0
 
+let complement = function
+  | 'A' -> 'T'
+  | 'C' -> 'G'
+  | 'G' -> 'C'
+  | 'T' -> 'A'
+  | x   -> ia "complement: %c" x
+
+let reverse_complement str =
+  let n   = String.length str in
+  let res = String.make n 'A' in
+  for i = 0 to n - 1 do
+    res.[i] <- complement (str.[n - i - 1])
+  done;
+  res
+
 (* Tests *)
 let test_skew () =
   assert (skew "ACGGC" =  [|0; 0; -1; 0; 1; 0|])
 
 let test_skew_min () =
   assert (skew_min "ACGGC" = (-1,[2]))
+
+let test_reverse_complement () =
+  assert (reverse_complement "ACGTT" = "AACGT")
