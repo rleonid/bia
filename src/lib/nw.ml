@@ -37,6 +37,16 @@ let needleman_wunsch_grid gap p s1 s2 =
   m, m.(x).(y)
 
 let traceback m row col =
+  let make_strings n (l, r) =
+    let ll = String.make n '-'
+    and rr = String.make n '-' in
+    let _n = List.fold_left2 (fun idx lc rc ->
+                ll.[idx] <- lc;
+                rr.[idx] <- rc;
+                idx + 1) 0 l r
+    in
+    (ll, rr)
+  in
   let add cl cr (ll,rr) = cl::ll, cr::rr in
   let ladd cl cr = List.map (add cl cr) in
   let rec loop n i j acc =
@@ -63,5 +73,23 @@ let c_gap = -1
 let c_score x y = if x = y then 1 else -1
 
 (* Canonical Needleman-Wunsch *)
-let c_nw = nw canonical_gap canonical_score
+let c_nw = nw c_gap c_score
 
+module NWGrid_printer = Aligned_array_array_printer (struct
+  type t = dir list * int
+
+  let to_string (dl, n) =
+    Printf.sprintf "%s : %d"
+      (String.concat "; "
+        (List.map (function
+            | Left    -> "Left"
+            | TopLeft -> "TopLeft"
+            | Top     -> "Top") dl))
+      n
+
+  let width p = to_string p |> String.length
+
+  let printer frmttr p = Format.pp_print_string frmttr (to_string p)
+end)
+
+(* #install_printer NWGrid_printer.printer *)
